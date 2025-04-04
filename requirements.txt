@@ -1,0 +1,9 @@
+pyotp
+google-api-python-client
+oauth2client
+google-auth
+pyyaml
+requests
+click
+playwright
+playwright-stealth
