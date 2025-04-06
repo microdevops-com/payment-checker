@@ -24,8 +24,13 @@ Requirements:
 1. Create `secret.json` with Google Service Account to access Google Sheets API to put checked payments in a Google Sheet.
 2. Create `config.yaml`, put working directory, google sheets, telegram setings there.
 3. Define a list of provider accounts to check in `config.yaml`.
-4. Check if it works with `payment-checker.py --config /home/user/payment-checker/config.yaml`.
-5. Create a cron job like this to check the payments daily in the morning:
+4. Install needed python requirements, setup playwright:
+   ```bash
+   pip install -r requirements.txt
+   playwright install
+   ```
+5. Check if it works with `payment-checker.py --config /home/user/payment-checker/config.yaml`.
+6. Create a cron job like this to check the payments daily in the morning:
    ```
    15 9 * * * /home/user/payment-checker/payment-checker.py --config /home/user/payment-checker/config.yaml > /home/user/payment-checker/cron.log 2>&1
    ```
