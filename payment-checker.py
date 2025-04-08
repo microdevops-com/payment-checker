@@ -11,6 +11,7 @@ import time
 from common import *
 from hetzner import hetzner
 from redswitches import redswitches
+from vsys import vsys
 import os
 import requests
 import textwrap
@@ -131,6 +132,8 @@ def main(config):
                 account_details, days_remaining, payment_status = hetzner(account["login"], account["password"], account["2fa"], item_number, proxy)
             elif account["type"] == "RedSwitches":
                 account_details, days_remaining, payment_status = redswitches(account["login"], account["password"], account["2fa"], item_number, proxy)
+            elif account["type"] == "VSys":
+                account_details, days_remaining, payment_status = vsys(account["login"], account["password"], account["2fa"], item_number, proxy)
 
         except Exception as e:
             print("Error:", e)

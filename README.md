@@ -11,8 +11,9 @@ So one can set up this script, check alerts in telegram chat, pay in time, and a
 The script uses playwright framework (headless browser).
 
 Providers supported:
-- Hetzner
-- RedSwitches
+- [Hetzner](https://hetzner.com/)
+- [RedSwitches](https://redswitches.com/)
+- [Virtual Systems](https://vsys.host/)
 
 Requirements:
 - A working directory to put screenshots to (helps to debug).
