@@ -5,11 +5,11 @@ from playwright.sync_api import sync_playwright
 from playwright_stealth import stealth_sync
 from common import *
 
-def redswitches(username, password, twofa_secret, item_number, proxy):
+def vsys(username, password, twofa_secret, item_number, proxy):
 
     with sync_playwright() as p:
 
-        print("Checking RedSwitches with a browser for the username:", username)
+        print("Checking VSys with a browser for the username:", username)
 
         # Launch a browser
         browser = p.chromium.launch(
@@ -28,12 +28,12 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         check_my_ip(page, item_number)
 
         # Logout, somehow it saves the session
-        page.goto("https://dedicated.redswitches.com/logout.php")
+        page.goto("https://vsys.host/logout.php")
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-0.png".format(item_number=item_number))
 
         # Navigate to a website
-        page.goto("https://dedicated.redswitches.com/index.php?rp=/login")
+        page.goto("https://vsys.host/login")
         page.wait_for_load_state("load")
         # There is a div
         # <div id="fullpage-overlay" class="w-hidden">
@@ -51,12 +51,13 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         page.screenshot(path="screenshots/{item_number}-1_1.png".format(item_number=item_number))
 
         # Click on the login button
+        # <button id="login" type="submit"
         page.wait_for_load_state("load")
         # If "Your Info" text is present anywhere on the page, then we are already logged in, don't know how it works
         if page.inner_text("body").find("Your Info") != -1:
             print("Already logged in")
         else:
-            page.click("input#login")
+            page.click("button#login")
 
         try:
             page.evaluate("document.getElementById('fullpage-overlay').remove()")
@@ -71,7 +72,7 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         print("Account name:", account_name)
 
         # Navigate to the invoices page
-        page.goto("https://dedicated.redswitches.com/clientarea.php?action=invoices")
+        page.goto("https://vsys.host/clientarea.php?action=invoices")
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-3.png".format(item_number=item_number))
 
@@ -114,7 +115,7 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
             payment_status = True
             
         # Logout
-        page.goto("https://dedicated.redswitches.com/logout.php")
+        page.goto("https://vsys.host/logout.php")
         page.wait_for_load_state("load")
 
         page.close()
