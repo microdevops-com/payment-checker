@@ -20,3 +20,6 @@ accounts:
   - type: VSys
     login: user@example.com
     password: password123
+  - type: Scaleway
+    login: AAAAAAAAAAAAAAAAAAAA # Scaleway API access key
+    password: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa # Scaleway API secret key

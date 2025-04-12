@@ -14,6 +14,7 @@ Providers supported:
 - [Hetzner](https://hetzner.com/)
 - [RedSwitches](https://redswitches.com/)
 - [Virtual Systems](https://vsys.host/)
+- [Scaleway](https://www.scaleway.com/) - they do provide API for billing ❤️
 
 Requirements:
 - A working directory to put screenshots to (helps to debug).

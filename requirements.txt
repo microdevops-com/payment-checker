@@ -7,3 +7,5 @@ requests
 click
 playwright
 playwright-stealth
+requests
+requests[socks]
