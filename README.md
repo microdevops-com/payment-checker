@@ -37,5 +37,5 @@ Requirements:
    ```
 6. Create a cron job like this to check the payments daily in the morning:
    ```
-   15 9 * * * docker run -it --rm -v /home/user/payment-checker/secret.json:/app/secret.json -v /home/user/payment-checker/config.yaml:/app/config.yaml -v /home/user/payment-checker/screenshots:/app/screenshots payment-checker > /home/user/payment-checker/cron.log 2>&1
+   15 9 * * * docker run --rm -v /home/user/payment-checker/secret.json:/app/secret.json -v /home/user/payment-checker/config.yaml:/app/config.yaml -v /home/user/payment-checker/screenshots:/app/screenshots payment-checker > /home/user/payment-checker/cron.log 2>&1
    ```
