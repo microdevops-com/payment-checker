@@ -20,19 +20,22 @@ Requirements:
 - A working directory to put screenshots to (helps to debug).
 - Google Service Account to access Google Sheets API and a Sheet to put checked payments.
 - Telegram Bot API token to send messages to Telegram and a chat ID to send messages to.
+- Docker.
 
 ## Setup
 
 1. Create `secret.json` with Google Service Account to access Google Sheets API to put checked payments in a Google Sheet.
 2. Create `config.yaml`, put working directory, google sheets, telegram setings there.
 3. Define a list of provider accounts to check in `config.yaml`.
-4. Install needed python requirements, setup playwright:
+4. Build and run the docker container:
    ```bash
-   pip install -r requirements.txt
-   playwright install
+   docker build -t payment-checker .
+   docker run -it --rm \
+       -v /home/user/payment-checker/secret.json:/app/secret.json \
+       -v /home/user/payment-checker/config.yaml:/app/config.yaml \
+       -v /home/user/payment-checker/screenshots:/app/screenshots payment-checker
    ```
-5. Check if it works with `payment-checker.py --config /home/user/payment-checker/config.yaml`.
 6. Create a cron job like this to check the payments daily in the morning:
    ```
-   15 9 * * * /home/user/payment-checker/payment-checker.py --config /home/user/payment-checker/config.yaml > /home/user/payment-checker/cron.log 2>&1
+   15 9 * * * docker run -it --rm -v /home/user/payment-checker/secret.json:/app/secret.json -v /home/user/payment-checker/config.yaml:/app/config.yaml -v /home/user/payment-checker/screenshots:/app/screenshots payment-checker > /home/user/payment-checker/cron.log 2>&1
    ```

@@ -1,7 +1,7 @@
 # Example Config
-cd: /home/user/payment-checker # Working directory
+cd: /app # Working directory, /app inside Docker
 google_sheets: # Update check history in Google Sheets
-  sa_secrets_file: /home/user/payment-checker/secret.json # Google service account secrets file
+  sa_secrets_file: /app/secret.json # Google service account secrets file
   spreadsheet_id: 11111111111111111111111111111111111111111111 # Google Sheets ID
   sheet_name: Payments Status # Google Sheets Sheet Name
 telegram:
