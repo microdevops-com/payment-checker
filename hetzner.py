@@ -70,8 +70,8 @@ def hetzner(username, password, twofa_secret, item_number, proxy):
         page.screenshot(path="screenshots/{item_number}-3.png".format(item_number=item_number))
 
         # Find the invoice creation date
-        # Sample: <label class="label label-blue required">21st of the month</label>
-        invoice_date_text = page.inner_text("label.label.label-blue.required")
+        # Sample: <li class="list-inline-item"><div class="badge badge-blue">12th of the month</div></li>
+        invoice_date_text = page.inner_text("li.list-inline-item > div.badge.badge-blue")
         print("The invoice will be created on the following day:", invoice_date_text)
 
         # Take a number by removing all non digits from the invoice_date_text
