@@ -121,7 +121,7 @@ def main(config):
         account_details = "None"
         days_remaining = "None"
         payment_status = "None"
-        successful_attempt = 0
+        attempts_made = 0
 
         # Set the proxy
         if "proxy" in account:
@@ -163,10 +163,10 @@ def main(config):
                     else:
                         # Last attempt failed with error values
                         print(f"All {max_attempts} attempts failed")
-                        successful_attempt = attempt
+                        attempts_made = attempt
                 else:
                     # Success - we got valid values
-                    successful_attempt = attempt
+                    attempts_made = attempt
                     print(f"Successfully checked account on attempt {attempt}")
                     break
 
@@ -183,7 +183,7 @@ def main(config):
                     account_details = "Error"
                     days_remaining = "Error"
                     payment_status = "Error"
-                    successful_attempt = attempt
+                    attempts_made = attempt
 
         # Prepare the row to be written to the Google Sheet
         row_list = [
@@ -200,7 +200,7 @@ def main(config):
 
         # Send an alert to the Telegram if status is not True
         if payment_status != True:
-            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, account["type"], account["login"], account_details, days_remaining, payment_status, "WARNING: Payment Issue Detected", successful_attempt)
+            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, account["type"], account["login"], account_details, days_remaining, payment_status, "WARNING: Payment Issue Detected", attempts_made)
             # Also set the no_issues to False
             no_issues = False
 
