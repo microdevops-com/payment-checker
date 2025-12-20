@@ -7,6 +7,8 @@ google_sheets: # Update check history in Google Sheets
 telegram:
   chat_id: -1001234567890 # Telegram chat ID
   token: 123456789:ABCdefGhIJKlmnoPQRstuVWXyz # Telegram bot token
+attempts: 3 # Number of attempts to check each account
+attempt_delay: 60 # Delay between attempts in seconds
 accounts:
   - type: Hetzner
     login: user@example.com

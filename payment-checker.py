@@ -50,9 +50,13 @@ def remove_screenshots():
         if file.endswith(".png") or file.endswith(".html"):
             os.remove("screenshots/" + file)
 
-def alert_telegram(chat_id, token, date, type, login, details, days, status, header):
+def alert_telegram(chat_id, token, date, type, login, details, days, status, header, attempts=None):
 
     # Markdown alert text template
+    attempts_text = ""
+    if attempts is not None:
+        attempts_text = f"Attempts Used: {attempts}\n        "
+
     text = textwrap.dedent(
         """
         {header}
@@ -62,7 +66,7 @@ def alert_telegram(chat_id, token, date, type, login, details, days, status, hea
         Account Details: {details}
         Days Remaining: {days}
         Payment Status: {status}
-        """
+        {attempts_text}"""
     ).format(
         header=header,
         date=date,
@@ -70,7 +74,8 @@ def alert_telegram(chat_id, token, date, type, login, details, days, status, hea
         login=login,
         details=details,
         days=days,
-        status=status
+        status=status,
+        attempts_text=attempts_text
     )
 
     # Telegram API URL
@@ -116,6 +121,7 @@ def main(config):
         account_details = "None"
         days_remaining = "None"
         payment_status = "None"
+        successful_attempt = 0
 
         # Set the proxy
         if "proxy" in account:
@@ -127,22 +133,43 @@ def main(config):
         if "2fa" not in account:
             account["2fa"] = None
 
-        try:
+        # Get retry configuration with defaults
+        max_attempts = config.get("attempts", 1)
+        delay_between_attempts = config.get("attempt_delay", 0)
 
-            if account["type"] == "Hetzner":
-                account_details, days_remaining, payment_status = hetzner(account["login"], account["password"], account["2fa"], item_number, proxy)
-            elif account["type"] == "RedSwitches":
-                account_details, days_remaining, payment_status = redswitches(account["login"], account["password"], account["2fa"], item_number, proxy)
-            elif account["type"] == "VSys":
-                account_details, days_remaining, payment_status = vsys(account["login"], account["password"], account["2fa"], item_number, proxy)
-            elif account["type"] == "Scaleway":
-                account_details, days_remaining, payment_status = scaleway(account["login"], account["password"], item_number, proxy)
+        # Try multiple attempts
+        for attempt in range(1, max_attempts + 1):
+            try:
+                print(f"Attempt {attempt} of {max_attempts}")
 
-        except Exception as e:
-            print("Error:", e)
-            account_details = "Error"
-            days_remaining = "Error"
-            payment_status = "Error"
+                if account["type"] == "Hetzner":
+                    account_details, days_remaining, payment_status = hetzner(account["login"], account["password"], account["2fa"], item_number, proxy)
+                elif account["type"] == "RedSwitches":
+                    account_details, days_remaining, payment_status = redswitches(account["login"], account["password"], account["2fa"], item_number, proxy)
+                elif account["type"] == "VSys":
+                    account_details, days_remaining, payment_status = vsys(account["login"], account["password"], account["2fa"], item_number, proxy)
+                elif account["type"] == "Scaleway":
+                    account_details, days_remaining, payment_status = scaleway(account["login"], account["password"], item_number, proxy)
+
+                # If we got here without exception, mark the successful attempt
+                successful_attempt = attempt
+                print(f"Successfully checked account on attempt {attempt}")
+                break
+
+            except Exception as e:
+                print(f"Error on attempt {attempt}: {e}")
+
+                # If this is not the last attempt, wait before retrying
+                if attempt < max_attempts:
+                    print(f"Waiting {delay_between_attempts} seconds before next attempt...")
+                    time.sleep(delay_between_attempts)
+                else:
+                    # Last attempt failed, set error values
+                    print(f"All {max_attempts} attempts failed")
+                    account_details = "Error"
+                    days_remaining = "Error"
+                    payment_status = "Error"
+                    successful_attempt = attempt
 
         # Prepare the row to be written to the Google Sheet
         row_list = [
@@ -159,7 +186,7 @@ def main(config):
 
         # Send an alert to the Telegram if status is not True
         if payment_status != True:
-            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, account["type"], account["login"], account_details, days_remaining, payment_status, "WARNING: Payment Issue Detected")
+            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, account["type"], account["login"], account_details, days_remaining, payment_status, "WARNING: Payment Issue Detected", successful_attempt)
             # Also set the no_issues to False
             no_issues = False
 
