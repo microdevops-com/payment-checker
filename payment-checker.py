@@ -151,13 +151,27 @@ def main(config):
                 elif account["type"] == "Scaleway":
                     account_details, days_remaining, payment_status = scaleway(account["login"], account["password"], item_number, proxy)
 
-                # If we got here without exception, mark the successful attempt
-                successful_attempt = attempt
-                print(f"Successfully checked account on attempt {attempt}")
-                break
+                # Check if the provider function returned error values
+                if account_details == "Error" or payment_status == "Error":
+                    print(f"Provider returned error values on attempt {attempt}")
+
+                    # If this is not the last attempt, wait before retrying
+                    if attempt < max_attempts:
+                        print(f"Waiting {delay_between_attempts} seconds before next attempt...")
+                        time.sleep(delay_between_attempts)
+                        continue
+                    else:
+                        # Last attempt failed with error values
+                        print(f"All {max_attempts} attempts failed")
+                        successful_attempt = attempt
+                else:
+                    # Success - we got valid values
+                    successful_attempt = attempt
+                    print(f"Successfully checked account on attempt {attempt}")
+                    break
 
             except Exception as e:
-                print(f"Error on attempt {attempt}: {e}")
+                print(f"Exception on attempt {attempt}: {e}")
 
                 # If this is not the last attempt, wait before retrying
                 if attempt < max_attempts:
@@ -165,7 +179,7 @@ def main(config):
                     time.sleep(delay_between_attempts)
                 else:
                     # Last attempt failed, set error values
-                    print(f"All {max_attempts} attempts failed")
+                    print(f"All {max_attempts} attempts failed with exception")
                     account_details = "Error"
                     days_remaining = "Error"
                     payment_status = "Error"
