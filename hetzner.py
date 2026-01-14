@@ -58,11 +58,13 @@ def hetzner(username, password, twofa_secret, item_number, proxy):
             page.wait_for_load_state("load")
             page.screenshot(path="screenshots/{item_number}-2_1.png".format(item_number=item_number))
 
-        # Get Client Number from <div class="idp-info">
-        client_number_text = page.inner_text("div.idp-info")
-        print(client_number_text)
-        # Extract the client number from the text by removing "Client number: " and keeping the last part
-        client_number = client_number_text.split("Client number: ")[1]
+        # Get Client Number
+        # <div class="user-detail">
+        # <span>some org</span>
+        # <small>Kxxxxxxxxxx</small>
+        # </div>
+        client_number = page.inner_text("div.user-detail > small")
+        print(client_number)
 
         # Navigate to the invoices page
         page.goto('https://accounts.hetzner.com/invoice')
