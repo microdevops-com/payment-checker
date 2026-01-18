@@ -67,6 +67,23 @@ def vsys(username, password, twofa_secret, item_number, proxy):
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-2.png".format(item_number=item_number))
 
+        # If the 2FA code is None, skip the 2FA step
+        if twofa_secret is not None:
+
+            # Get the 2FA code
+            totp = pyotp.TOTP(twofa_secret)
+            otp = totp.now()
+
+            # Fill in the 2FA code
+            # <input type="text" name="key" maxlength="6" class="form-control input-lg form-control-lg" autofocus>
+            page.type("input[name='key']", otp)
+
+            # Click on the verify button
+            # <input id="btnLogin" type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
+            page.click("input#btnLogin")
+            page.wait_for_load_state("load")
+            page.screenshot(path="screenshots/{item_number}-2_1.png".format(item_number=item_number))
+
         # Get Account Name, it sits between <strong></strong> tags
         account_name = page.inner_text("strong")
         print("Account name:", account_name)
