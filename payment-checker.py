@@ -13,6 +13,7 @@ from hetzner import hetzner
 from redswitches import redswitches
 from vsys import vsys
 from scaleway import scaleway
+from knownsrv import knownsrv
 import os
 import requests
 import textwrap
@@ -150,6 +151,8 @@ def main(config):
                     account_details, days_remaining, payment_status = vsys(account["login"], account["password"], account["2fa"], item_number, proxy)
                 elif account["type"] == "Scaleway":
                     account_details, days_remaining, payment_status = scaleway(account["login"], account["password"], item_number, proxy)
+                elif account["type"] == "KnownSRV":
+                    account_details, days_remaining, payment_status = knownsrv(account["login"], account["password"], account["2fa"], item_number, proxy)
 
                 # Check if the provider function returned error values
                 if account_details == "Error" or payment_status == "Error":

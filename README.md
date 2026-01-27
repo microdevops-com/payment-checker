@@ -15,6 +15,7 @@ Providers supported:
 - [RedSwitches](https://redswitches.com/)
 - [Virtual Systems](https://vsys.host/)
 - [Scaleway](https://www.scaleway.com/) - they do provide API for billing ❤️
+- [KnownSRV](https://knownsrv.com/)
 
 Requirements:
 - A working directory to put screenshots to (helps to debug).

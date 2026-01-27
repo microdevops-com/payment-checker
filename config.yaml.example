@@ -13,7 +13,7 @@ accounts:
   - type: Hetzner
     login: user@example.com
     password: password123
-    2fa: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # 2FA code, Hetzner supported
+    #2fa: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # 2FA code, optional
     proxy: # Proxy is optional and supported for all providers
       server: socks5://1.2.3.4:111
   - type: RedSwitches
@@ -22,6 +22,11 @@ accounts:
   - type: VSys
     login: user@example.com
     password: password123
+    #2fa: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # 2FA code, optional
   - type: Scaleway
     login: AAAAAAAAAAAAAAAAAAAA # Scaleway API access key
     password: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa # Scaleway API secret key
+  - type: KnownSRV
+    login: user@example.com
+    password: password123
+    #2fa: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # 2FA code, optional

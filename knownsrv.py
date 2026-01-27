@@ -5,11 +5,11 @@ from playwright.sync_api import sync_playwright
 from playwright_stealth import stealth_sync
 from common import *
 
-def vsys(username, password, twofa_secret, item_number, proxy):
+def knownsrv(username, password, twofa_secret, item_number, proxy):
 
     with sync_playwright() as p:
 
-        print("Checking VSys with a browser for the username:", username)
+        print("Checking KnownSRV with a browser for the username:", username)
 
         # Launch a browser
         browser = p.chromium.launch(
@@ -28,12 +28,12 @@ def vsys(username, password, twofa_secret, item_number, proxy):
         check_my_ip(page, item_number)
 
         # Logout, somehow it saves the session
-        page.goto("https://vsys.host/logout.php")
+        page.goto("https://knownsrv.com/clients/logout.php")
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-0.png".format(item_number=item_number))
 
         # Navigate to a website
-        page.goto("https://vsys.host/login")
+        page.goto("https://knownsrv.com/clients/index.php?rp=/login")
         page.wait_for_load_state("load")
         # There is a div
         # <div id="fullpage-overlay" class="w-hidden">
@@ -89,7 +89,7 @@ def vsys(username, password, twofa_secret, item_number, proxy):
         print("Account name:", account_name)
 
         # Navigate to the invoices page
-        page.goto("https://vsys.host/clientarea.php?action=invoices")
+        page.goto("https://knownsrv.com/clients/clientarea.php?action=invoices")
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-3.png".format(item_number=item_number))
 
@@ -132,7 +132,7 @@ def vsys(username, password, twofa_secret, item_number, proxy):
             payment_status = True
             
         # Logout
-        page.goto("https://vsys.host/logout.php")
+        page.goto("https://knownsrv.com/clients/logout.php")
         page.wait_for_load_state("load")
 
         page.close()
