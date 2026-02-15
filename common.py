@@ -3,7 +3,10 @@ def check_my_ip(page, item_number):
     print("Checking IP address...")
 
     # Navigate to a website
-    page.goto("https://ip.me/")
+    try:
+        page.goto("https://ip.me/")
+    except:
+        page.goto("https://ifconfig.me/")
 
     # Print debug information
     print("Page title:", page.title())

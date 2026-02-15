@@ -30,3 +30,6 @@ accounts:
     login: user@example.com
     password: password123
     #2fa: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # 2FA code, optional
+  - type: PraHost
+    login: user@example.com
+    password: password123
