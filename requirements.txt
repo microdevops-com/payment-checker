@@ -8,4 +8,4 @@ requests[socks]==2.31.0
 click==8.1.7
 playwright==1.51.0
 playwright-stealth==1.0.6
-setuptools
+setuptools<80
