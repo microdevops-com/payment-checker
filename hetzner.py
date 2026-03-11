@@ -39,7 +39,7 @@ def hetzner(username, password, twofa_secret, item_number, proxy):
 
         # Click on the login button
         page.wait_for_load_state("load")
-        page.click("input#submit-login")
+        page.click("button[type='submit']")
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-2.png".format(item_number=item_number))
 
@@ -51,10 +51,10 @@ def hetzner(username, password, twofa_secret, item_number, proxy):
             otp = totp.now()
 
             # Fill in the 2FA code
-            page.type("input#input-verify-code", otp)
+            page.type("input#_auth_code", otp)
 
             # Click on the verify button
-            page.click("input#btn-submit")
+            page.click("button#btn-submit")
             page.wait_for_load_state("load")
             page.screenshot(path="screenshots/{item_number}-2_1.png".format(item_number=item_number))
 
