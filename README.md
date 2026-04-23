@@ -17,6 +17,7 @@ Providers supported:
 - [Scaleway](https://www.scaleway.com/) - they do provide API for billing ❤️
 - [KnownSRV](https://knownsrv.com/)
 - [PraHost](https://www.prahost.com/)
+- [OVH](https://www.ovh.com/) - they do provide API for billing ❤️
 
 Requirements:
 - A working directory to put screenshots to (helps to debug).

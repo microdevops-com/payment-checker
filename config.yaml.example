@@ -33,3 +33,7 @@ accounts:
   - type: PraHost
     login: user@example.com
     password: password123
+  - type: OVH
+    login: AAAAAAAAAAAAAAAAAAAA # OVH Application Key
+    password: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # OVH Application Secret
+    consumer_key: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # OVH Consumer Key
