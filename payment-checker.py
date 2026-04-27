@@ -16,6 +16,7 @@ from scaleway import scaleway
 from knownsrv import knownsrv
 from prahost import prahost
 from ovh import ovh
+from worldstream import worldstream
 import os
 import requests
 import textwrap
@@ -159,6 +160,8 @@ def main(config):
                     account_details, days_remaining, payment_status = prahost(account["login"], account["password"], account["2fa"], item_number, proxy)
                 elif account["type"] == "OVH":
                     account_details, days_remaining, payment_status = ovh(account["login"], account["password"], account["consumer_key"], item_number, proxy)
+                elif account["type"] == "Worldstream":
+                    account_details, days_remaining, payment_status = worldstream(account["login"], item_number, proxy)
 
                 # Check if the provider function returned error values
                 if account_details == "Error" or payment_status == "Error":

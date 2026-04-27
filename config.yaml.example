@@ -43,6 +43,10 @@ accounts:
     password: password123
     #proxy:
     #  server: socks5://1.2.3.4:111
+  - type: Worldstream
+    login: AAAAAAAAAAAAAAAAAAAAAA # Worldstream API Key
+    #proxy:
+    #  server: socks5://1.2.3.4:111
   - type: OVH
     login: AAAAAAAAAAAAAAAAAAAA # OVH Application Key
     password: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # OVH Application Secret

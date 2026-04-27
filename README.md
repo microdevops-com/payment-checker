@@ -18,6 +18,7 @@ Providers supported:
 - [KnownSRV](https://knownsrv.com/)
 - [PraHost](https://www.prahost.com/)
 - [OVH](https://www.ovh.com/) - they do provide API for billing ❤️
+- [Worldstream](https://www.worldstream.com/) - they do provide API for billing, but no due dates, days remaining is always N/A
 
 Requirements:
 - A working directory to put screenshots to (helps to debug).
