@@ -17,6 +17,7 @@ from knownsrv import knownsrv
 from prahost import prahost
 from ovh import ovh
 from worldstream import worldstream
+from bunny import bunny
 import os
 import requests
 import textwrap
@@ -162,6 +163,8 @@ def main(config):
                     account_details, days_remaining, payment_status = ovh(account["login"], account["password"], account["consumer_key"], item_number, proxy)
                 elif account["type"] == "Worldstream":
                     account_details, days_remaining, payment_status = worldstream(account["login"], item_number, proxy)
+                elif account["type"] == "BunnyCDN":
+                    account_details, days_remaining, payment_status = bunny(account["login"], account["balance_remaining"], account["days_remaining"], item_number, proxy)
 
                 # Check if the provider function returned error values
                 if account_details == "Error" or payment_status == "Error":

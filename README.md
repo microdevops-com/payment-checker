@@ -19,6 +19,7 @@ Providers supported:
 - [PraHost](https://www.prahost.com/)
 - [OVH](https://www.ovh.com/) - they do provide API for billing ❤️
 - [Worldstream](https://www.worldstream.com/) - they do provide API for billing, but no due dates, days remaining is always N/A
+- [Bunny CDN](https://bunny.net/) - API billing ❤️, prepaid/credit-based; alerts on low balance or low projected days remaining
 
 Requirements:
 - A working directory to put screenshots to (helps to debug).
