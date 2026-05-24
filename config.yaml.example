@@ -54,7 +54,7 @@ accounts:
     #proxy:
     #  server: socks5://1.2.3.4:111
   - type: BunnyCDN
-    login: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # Bunny CDN API key (Account > API)
+    api_key: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # Bunny CDN API key (Account > API)
     balance_remaining: 50   # alert if account balance drops below this amount (in account currency)
     days_remaining: 30      # alert if projected days of balance left drops below this
     #proxy:

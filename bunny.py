@@ -18,10 +18,11 @@ def bunny(api_key, balance_threshold, days_threshold, item_number, proxy):
 
     user = _get(api_key, "/user", proxy)
     account_name = user.get("CompanyName") or user.get("Email", "Unknown")
+    email = user.get("Email", "Unknown")
 
     # Account hard-disabled or suspended
     if user.get("Suspended") or user.get("AccountDisabled"):
-        return f"{account_name} | $0.00", "N/A", False
+        return f"{account_name} | $0.00", "N/A", False, email
 
     billing = _get(api_key, "/billing", proxy)
     balance = billing.get("Balance", 0)
@@ -49,4 +50,4 @@ def bunny(api_key, balance_threshold, days_threshold, item_number, proxy):
     else:
         payment_status = True
 
-    return account_details, days_remaining, payment_status
+    return account_details, days_remaining, payment_status, email

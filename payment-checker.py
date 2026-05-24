@@ -120,7 +120,12 @@ def main(config):
 
         item_number += 1
 
-        print("Checking account type {type} for the login {login}".format(**account))
+        # login_display: all providers use account["login"]; BunnyCDN has no
+        # "login" key (uses "api_key") and overrides this with the real email
+        # fetched from the API so the key is never written to logs/sheets/alerts
+        login_display = account.get("login", "")
+
+        print(f"Checking account type {account['type']} for the login {login_display}")
 
         # Unset the variables
         account_details = "None"
@@ -164,7 +169,7 @@ def main(config):
                 elif account["type"] == "Worldstream":
                     account_details, days_remaining, payment_status = worldstream(account["login"], item_number, proxy)
                 elif account["type"] == "BunnyCDN":
-                    account_details, days_remaining, payment_status = bunny(account["login"], account["balance_remaining"], account["days_remaining"], item_number, proxy)
+                    account_details, days_remaining, payment_status, login_display = bunny(account["api_key"], account["balance_remaining"], account["days_remaining"], item_number, proxy)
 
                 # Check if the provider function returned error values
                 if account_details == "Error" or payment_status == "Error":
@@ -204,7 +209,7 @@ def main(config):
         row_list = [
             current_date,
             account["type"],
-            account["login"],
+            login_display,
             account_details,
             days_remaining,
             payment_status
@@ -215,7 +220,7 @@ def main(config):
 
         # Send an alert to the Telegram if status is not True
         if payment_status != True:
-            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, account["type"], account["login"], account_details, days_remaining, payment_status, "WARNING: Payment Issue Detected", attempts_made)
+            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, account["type"], login_display, account_details, days_remaining, payment_status, "WARNING: Payment Issue Detected", attempts_made)
             # Also set the no_issues to False
             no_issues = False
 
