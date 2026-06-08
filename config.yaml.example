@@ -1,9 +1,11 @@
 # Example Config
 cd: /app # Working directory, /app inside Docker
-google_sheets: # Update check history in Google Sheets
-  sa_secrets_file: /app/secret.json # Google service account secrets file
-  spreadsheet_id: 11111111111111111111111111111111111111111111 # Google Sheets ID
-  sheet_name: Payments Status # Google Sheets Sheet Name
+#google_sheets: # optional: update check history in Google Sheets
+#  sa_secrets_file: /app/secret.json # Google service account secrets file
+#  spreadsheet_id: 11111111111111111111111111111111111111111111 # Google Sheets ID
+#  sheet_name: Payments Status # Google Sheets Sheet Name
+#text_file: # optional: write check history to a tab-separated text file
+#  path: /app/payment-status.tsv
 telegram:
   chat_id: -1001234567890 # Telegram chat ID
   token: 123456789:ABCdefGhIJKlmnoPQRstuVWXyz # Telegram bot token

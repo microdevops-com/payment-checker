@@ -45,6 +45,16 @@ def append_google_sheet(sa_secrets_file, spreadsheet_id, sheet_name, row_list):
     response = request.execute()
     print("Appended the row to the Google Sheet")
 
+def clear_text_file(path):
+    with open(path, "w") as f:
+        f.write("Date\tType\tLogin\tDetails\tDays Remaining\tPayment Status\n")
+    print("Cleared the text file")
+
+def append_text_file(path, row_list):
+    with open(path, "a") as f:
+        f.write("\t".join(str(v) for v in row_list) + "\n")
+    print("Appended the row to the text file")
+
 def remove_screenshots():
 
     import os
@@ -101,12 +111,22 @@ def main(config):
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 
     # Clear the Google Sheet
-    try:
-        clear_google_sheet(config["google_sheets"]["sa_secrets_file"], config["google_sheets"]["spreadsheet_id"], config["google_sheets"]["sheet_name"])
-    except Exception as e:
-        print("Error:", e)
-        alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, "---", "---", "---", "---", "---", "ERROR: Google Sheet Clearing Failed")
-        exit(1)
+    if "google_sheets" in config:
+        try:
+            clear_google_sheet(config["google_sheets"]["sa_secrets_file"], config["google_sheets"]["spreadsheet_id"], config["google_sheets"]["sheet_name"])
+        except Exception as e:
+            print("Error:", e)
+            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, "---", "---", "---", "---", "---", "ERROR: Google Sheet Clearing Failed")
+            exit(1)
+
+    # Clear the text file
+    if "text_file" in config:
+        try:
+            clear_text_file(config["text_file"]["path"])
+        except Exception as e:
+            print("Error:", e)
+            alert_telegram(config["telegram"]["chat_id"], config["telegram"]["token"], current_date, "---", "---", "---", "---", "---", "ERROR: Text File Clearing Failed")
+            exit(1)
 
     # Remove all screenshots from the screenshots directory
     remove_screenshots()
@@ -216,7 +236,12 @@ def main(config):
         ]
 
         # Write the data to the Google Sheet
-        append_google_sheet(config["google_sheets"]["sa_secrets_file"], config["google_sheets"]["spreadsheet_id"], config["google_sheets"]["sheet_name"], row_list)
+        if "google_sheets" in config:
+            append_google_sheet(config["google_sheets"]["sa_secrets_file"], config["google_sheets"]["spreadsheet_id"], config["google_sheets"]["sheet_name"], row_list)
+
+        # Write the data to the text file
+        if "text_file" in config:
+            append_text_file(config["text_file"]["path"], row_list)
 
         # Send an alert to the Telegram if status is not True
         if payment_status != True:
