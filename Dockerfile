@@ -21,7 +21,7 @@ RUN chown -R appuser:appuser /home/appuser/.cache
 USER appuser
 
 # Copy application code
-COPY *.py .
+COPY *.py ./
 
 # Run the application
 CMD ["/app/payment-checker.py", "--config", "/app/config.yaml"]
