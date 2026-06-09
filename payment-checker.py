@@ -185,7 +185,7 @@ def main(config):
                 elif account["type"] == "PraHost":
                     account_details, days_remaining, payment_status = prahost(account["login"], account["password"], account["2fa"], item_number, proxy)
                 elif account["type"] == "OVH":
-                    account_details, days_remaining, payment_status = ovh(account["login"], account["password"], account["consumer_key"], item_number, proxy)
+                    account_details, days_remaining, payment_status = ovh(account["login"], account["password"], account["consumer_key"], account.get("region", "eu"), item_number, proxy)
                 elif account["type"] == "Worldstream":
                     account_details, days_remaining, payment_status = worldstream(account["login"], item_number, proxy)
                 elif account["type"] == "BunnyCDN":
