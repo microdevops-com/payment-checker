@@ -3,10 +3,13 @@ import hashlib
 import time
 import requests
 
-ENDPOINT = "https://eu.api.ovh.com/v1"
+ENDPOINTS = {
+    "eu": "https://eu.api.ovh.com/v1",
+    "ca": "https://ca.api.ovh.com/v1",
+}
 
-def _signed_get(app_key, app_secret, consumer_key, path, proxy=None):
-    url = ENDPOINT + path
+def _signed_get(app_key, app_secret, consumer_key, path, endpoint, proxy=None):
+    url = endpoint + path
     ts = str(int(time.time()))
     sig_input = f"{app_secret}+{consumer_key}+GET+{url}++{ts}"
     signature = "$1$" + hashlib.sha1(sig_input.encode()).hexdigest()
@@ -27,13 +30,17 @@ def _signed_get(app_key, app_secret, consumer_key, path, proxy=None):
     return response.json()
 
 
-def ovh(app_key, app_secret, consumer_key, item_number, proxy):
+def ovh(app_key, app_secret, consumer_key, region, item_number, proxy):
 
-    me = _signed_get(app_key, app_secret, consumer_key, "/me", proxy)
+    endpoint = ENDPOINTS.get((region or "eu").lower())
+    if endpoint is None:
+        raise Exception(f"Unknown OVH region '{region}'. Supported: {', '.join(ENDPOINTS)}")
+
+    me = _signed_get(app_key, app_secret, consumer_key, "/me", endpoint, proxy)
     account_name = me.get("organisation") or f"{me.get('firstname', '')} {me.get('name', '')}".strip()
 
     from_date = (datetime.datetime.utcnow() - datetime.timedelta(days=60)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-    bill_ids = _signed_get(app_key, app_secret, consumer_key, f"/me/bill?date.from={from_date}", proxy)
+    bill_ids = _signed_get(app_key, app_secret, consumer_key, f"/me/bill?date.from={from_date}", endpoint, proxy)
 
     if not bill_ids:
         return account_name, "N/A", True
@@ -42,7 +49,7 @@ def ovh(app_key, app_secret, consumer_key, item_number, proxy):
     most_recent_date = None
 
     for bill_id in bill_ids:
-        debt = _signed_get(app_key, app_secret, consumer_key, f"/me/bill/{bill_id}/debt", proxy)
+        debt = _signed_get(app_key, app_secret, consumer_key, f"/me/bill/{bill_id}/debt", endpoint, proxy)
         if debt is None:
             continue
 

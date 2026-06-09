@@ -50,6 +50,7 @@ accounts:
     #proxy:
     #  server: socks5://1.2.3.4:111
   - type: OVH
+    #region: ca # OVH API region: eu (default) or ca. Credentials are region-specific.
     login: AAAAAAAAAAAAAAAAAAAA # OVH Application Key
     password: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # OVH Application Secret
     consumer_key: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA # OVH Consumer Key
