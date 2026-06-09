@@ -26,7 +26,7 @@ def _signed_get(app_key, app_secret, consumer_key, path, endpoint, proxy=None):
     if response.status_code == 404:
         return None
     if response.status_code != 200:
-        raise Exception(f"OVH API error {response.status_code}: {response.text}")
+        raise Exception(f"OVH API error {url} {response.status_code}: {response.text}")
     return response.json()
 
 
