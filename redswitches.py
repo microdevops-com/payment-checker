@@ -51,12 +51,14 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         page.screenshot(path="screenshots/{item_number}-1_1.png".format(item_number=item_number))
 
         # Click on the login button
+        # <button id="login" type="submit" class="btn btn-primary rs-auth-submit">Login</button>
+        # It used to be an <input>, accept both in case the theme changes back
         page.wait_for_load_state("load")
         # If "Your Info" text is present anywhere on the page, then we are already logged in, don't know how it works
         if page.inner_text("body").find("Your Info") != -1:
             print("Already logged in")
         else:
-            page.click("input#login")
+            page.click("button#login, input#login")
 
         try:
             page.evaluate("document.getElementById('fullpage-overlay').remove()")
