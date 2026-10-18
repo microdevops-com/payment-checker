@@ -1,3 +1,4 @@
+import re
 import pyotp
 import datetime
 import calendar
@@ -68,8 +69,9 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         page.wait_for_load_state("load")
         page.screenshot(path="screenshots/{item_number}-2.png".format(item_number=item_number))
 
-        # Get Account Name, it sits between <strong></strong> tags
-        account_name = page.inner_text("strong")
+        # Get Account Name, the new "RedSwitches Cloud" theme shows the user name
+        # in the sidebar: <span class="rx-me-n">Name</span>
+        account_name = page.inner_text("span.rx-me-n")
         print("Account name:", account_name)
 
         # Navigate to the invoices page
@@ -81,25 +83,24 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         with open("screenshots/{item_number}-3.html".format(item_number=item_number), "w") as f:
             f.write(page.content())
 
-        # No sense to remove overlay here or make screenshots, it will just show Loading...
-        # But the invoices data is already there, it is in that table
-        # <table id="tableInvoicesList" class="table table-list w-hidden">
-        # In that table, in <tbody>, walk through all <tr>
-        # First <td> is the invoice number
-        # Third <td> os the due date, needed text is in the <span class="w-hidden"> tag
-        # Fifth <td> is the status
+        # The invoices are in that table (new "RedSwitches Cloud" theme)
+        # <table class="rx-table" id="rx-invoices">
+        # In that table, in <tbody>, walk through all <tr class="rx-row" data-kind="paid|other|unpaid">
+        # <td class="rx-c-inv"> holds the invoice number as "#8031"
+        # <td class="rx-c-due"> holds the due date as "24th Oct 2026"
+        # <td class="rx-c-st"> holds the status: Paid, Unpaid, Cancelled, ...
 
         # Collect all invoices into a list
         invoices = []
-        for tr in page.query_selector_all("table#tableInvoicesList tbody tr"):
-            # Take first, third and fifth <td> elements
-            td1 = tr.query_selector("td:nth-child(1)")
-            td3 = tr.query_selector("td:nth-child(3) span.w-hidden")
-            td5 = tr.query_selector("td:nth-child(5)")
-            # Append to the list
-            # The due date is in format "YYYY-MM-DD", convert to datetime
-            due_date = datetime.datetime.strptime(td3.inner_text(), "%Y-%m-%d")
-            invoices.append((td1.inner_text(), due_date, td5.inner_text()))
+        for tr in page.query_selector_all("table#rx-invoices tbody tr"):
+            td_inv = tr.query_selector("td.rx-c-inv")
+            td_due = tr.query_selector("td.rx-c-due")
+            td_st = tr.query_selector("td.rx-c-st")
+            invoice_number = td_inv.inner_text().strip().lstrip("#")
+            # The due date is in format "24th Oct 2026", drop the ordinal suffix and convert to datetime
+            due_text = re.sub(r"(\d+)(st|nd|rd|th)", r"\1", td_due.inner_text().strip())
+            due_date = datetime.datetime.strptime(due_text, "%d %b %Y")
+            invoices.append((invoice_number, due_date, td_st.inner_text().strip()))
 
         # Check if there are any unpaid invoices
         if any("Unpaid" in invoice[2] for invoice in invoices):
