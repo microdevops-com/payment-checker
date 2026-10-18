@@ -55,8 +55,12 @@ def redswitches(username, password, twofa_secret, item_number, proxy):
         # <button id="login" type="submit" class="btn btn-primary rs-auth-submit">Login</button>
         # It used to be an <input>, accept both in case the theme changes back
         page.wait_for_load_state("load")
-        # If "Your Info" text is present anywhere on the page, then we are already logged in, don't know how it works
-        if page.inner_text("body").find("Your Info") != -1:
+        # Sometimes typing the credentials already lands us in the client area (e.g. the password
+        # ends with a newline and submits the form). Wait for either the login button or a sign
+        # that we are logged in: the sidebar user menu <span class="rx-me-n"> in the new theme,
+        # or the "Your Info" text in the old theme.
+        page.wait_for_selector("button#login, input#login, span.rx-me-n")
+        if page.query_selector("span.rx-me-n") is not None or page.inner_text("body").find("Your Info") != -1:
             print("Already logged in")
         else:
             page.click("button#login, input#login")

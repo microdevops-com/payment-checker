@@ -163,6 +163,12 @@ def main(config):
         if "2fa" not in account:
             account["2fa"] = None
 
+        # YAML block scalars ("password: |") keep a trailing newline, which gets typed into
+        # the login form as Enter. Strip line breaks from the credentials, keep other characters.
+        for key in ("login", "password"):
+            if isinstance(account.get(key), str):
+                account[key] = account[key].rstrip("\r\n")
+
         # Get retry configuration with defaults
         max_attempts = config.get("attempts", 1)
         delay_between_attempts = config.get("attempt_delay", 0)
