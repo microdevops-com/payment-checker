@@ -12,7 +12,7 @@ The script uses playwright framework (headless browser).
 
 Providers supported:
 - [Hetzner](https://hetzner.com/)
-- [RedSwitches](https://redswitches.com/)
+- [RedSwitches](https://redswitches.com/) - ⚠️ currently blocked by Cloudflare Turnstile, no billing API, see [Known issues](#known-issues)
 - [Virtual Systems](https://vsys.host/)
 - [Scaleway](https://www.scaleway.com/) - they do provide API for billing ❤️
 - [KnownSRV](https://knownsrv.com/)
@@ -26,6 +26,19 @@ Requirements:
 - Google Service Account to access Google Sheets API and a Sheet to put checked payments.
 - Telegram Bot API token to send messages to Telegram and a chat ID to send messages to.
 - Docker.
+
+## Known issues
+
+### RedSwitches: blocked by Cloudflare Turnstile, no billing API
+
+Since November 2026 the RedSwitches check does not work.
+
+- RedSwitches put a Cloudflare challenge ("Performing security verification", Turnstile) in front of the client area login page `https://dedicated.redswitches.com/index.php?rp=/login`.
+- The headless browser never passes it, so the login form is never shown and every attempt fails with `Page.type: Timeout 30000ms exceeded` while `waiting for locator("input#inputEmail")`.
+- The challenge is not tied to the server IP: a plain request to the login URL gets `403` with the `cf-mitigated: challenge` header from any address.
+- RedSwitches does not provide a billing API, and there is no public documentation page for any API at all, so there is no alternative way to get invoices automatically.
+
+Until RedSwitches provides an API or removes the challenge, RedSwitches accounts have to be checked manually.
 
 ## Setup
 
